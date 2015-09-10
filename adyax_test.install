@@ -16,20 +16,23 @@ function adyax_test_schema() {
         'description' => 'The primary identifier for a field.',
         'type' => 'serial',
         'unsigned' => TRUE,
-        'not null' => TRUE),
-	  'nid' => array(
+        'not null' => TRUE
+      ),
+      'nid' => array(
         'description' => 'The current node identifier.',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default' => 0),
+        'default' => 0
+      ),
       'field_value' => array(
         'description' => 'The value of this field.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
-        'default' => ''),
+        'default' => ''
       ),
+    ),
     'unique keys' => array(
       'nid'     => array('nid')
       ),
@@ -42,6 +45,6 @@ function adyax_test_schema() {
  * Implements hook_uninstall().
  */
 function adyax_test_uninstall() {
-  field_attach_delete_bundle('entity_example_basic', 'first_example_bundle');
+  drupal_uninstall_schema('adyax_test');
 }
 
