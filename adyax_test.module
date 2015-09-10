@@ -1,0 +1,87 @@
+<?php
+
+/**
+ * @file
+ * Test module for some test
+ */
+ 
+/**
+ * Implements hook_help()
+ */
+function adyax_test_help($path, $arg) {
+  switch ($path) {
+    case "admin/help#adyax_test":
+      return '<p>' . t("Creates additional textfield for node.") . '</p>';
+      break;
+  }
+}
+
+/**
+ * Implements hook_form_alter()
+ */
+function adyax_test_form_alter(&$form, $form_state, $form_id) { 
+  if (strpos($form_id, '_node_form') !== FALSE) {
+    $form['adyax_test'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Test field'),
+      '#weight' => -1,
+      '#default_value' => isset($form_state['node']->adyax_test) ? $form_state['node']->adyax_test : '',
+    );
+  }
+}
+
+/**
+ * Implements hook_node_load()
+ */
+function adyax_test_node_load($nodes, $types) {
+  $result = db_query(
+    'SELECT id, nid, field_value FROM {field_adyax_test} WHERE nid IN (:nids)', 
+    array(':nids' => array_keys($nodes)), 
+    array('fetch' => PDO::FETCH_ASSOC)
+  );
+  foreach ($result as $record) {
+    $nodes[$record['nid']]->adyax_test = $record['field_value'];
+  }
+}
+
+/**
+ * Implements hook_node_insert()
+ */
+function adyax_test_node_insert($node) {
+  db_insert('field_adyax_test')
+	->fields(array(
+      'nid' => $node->nid,
+      'field_value' => $node->adyax_test,
+    ))
+    ->execute();
+}
+
+/**
+ * Implements hook_node_update()
+ */
+function adyax_test_node_update($node) {
+  db_update('field_adyax_test')
+    ->fields(array('field_value' => $node->adyax_test))
+    ->condition('nid', $node->nid)
+    ->execute();
+}
+
+/**
+ * Implements hook_node_update()
+ */
+function adyax_test_node_delete($node) {
+  db_delete('field_adyax_test')
+    ->condition('nid', $node->nid)
+    ->execute();
+}
+
+/**
+ * Implements hook_views_api()
+ */
+function adyax_test_views_api() {
+    return array(
+        'api' => '3.0-alpha1',
+        'path' => drupal_get_path('module','adyax_test') . '/views',
+    );
+}
+

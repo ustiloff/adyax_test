@@ -1,0 +1,9 @@
+name = Adyax test
+description = Add text field.
+core = 7.x
+
+dependencies[] = views
+files[] = adyax_test.module
+files[] = adyax_test.install
+files[] = views/adyax_test.views.inc
+
