@@ -41,10 +41,3 @@ function adyax_test_schema() {
   return $schema;
 }
 
-/**
- * Implements hook_uninstall().
- */
-function adyax_test_uninstall() {
-  drupal_uninstall_schema('adyax_test');
-}
-
